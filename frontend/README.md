@@ -1,70 +1,120 @@
-# Getting Started with Create React App
+# Video Producer & Sports Photographer Portfolio
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A stunning portfolio website for video production and sports photography professionals, featuring a modern design with dark blue and white color scheme.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- 🎬 **Hero Section** - Eye-catching landing with call-to-action buttons
+- 📺 **Video Showcase** - Featured reel with thumbnail gallery
+- 🖼️ **Portfolio Gallery** - Filterable projects by category (Matchday, Training, Interviews, Social Media, Events, Sponsored Content)
+- 👤 **About Section** - Personal bio with achievement stats
+- 💼 **Skills & Experience** - Professional journey timeline
+- 📧 **Contact Form** - Working form with toast notifications (saves to localStorage)
+- 📱 **Fully Responsive** - Mobile, tablet, and desktop optimized
 
-### `npm start`
+## Design Highlights
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Typography**: Bebas Neue (headings) + Poppins (body)
+- **Colors**: Dark Blue (#1E3A8A) + White/Light Grey
+- **Icons**: Lucide React (no emojis)
+- **Components**: Shadcn UI
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Quick Start
 
-### `npm test`
+### Prerequisites
+- Node.js 16+ and Yarn
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Installation
 
-### `npm run build`
+```bash
+cd frontend
+yarn install
+yarn start
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The site will open at `http://localhost:3000`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Building for Production
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+yarn build
+```
 
-### `npm run eject`
+This creates an optimized build in the `build/` folder ready for deployment.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Deployment Options
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Option 1: GitHub Pages
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. Add to `package.json`:
+```json
+"homepage": "https://yourusername.github.io/your-repo-name",
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+2. Install gh-pages:
+```bash
+yarn add -D gh-pages
+```
 
-## Learn More
+3. Add scripts to `package.json`:
+```json
+"predeploy": "yarn build",
+"deploy": "gh-pages -d build"
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+4. Deploy:
+```bash
+yarn deploy
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Option 2: Vercel
 
-### Code Splitting
+1. Install Vercel CLI:
+```bash
+npm i -g vercel
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+2. Deploy:
+```bash
+cd frontend
+vercel
+```
 
-### Analyzing the Bundle Size
+### Option 3: Netlify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+1. Install Netlify CLI:
+```bash
+npm install -g netlify-cli
+```
 
-### Making a Progressive Web App
+2. Deploy:
+```bash
+cd frontend
+yarn build
+netlify deploy --prod --dir=build
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Customization
 
-### Advanced Configuration
+Edit `/frontend/src/mock.js` to update:
+- Personal information (name, title, email, social links)
+- Featured reel video URL
+- Portfolio projects
+- Skills and experience
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Technologies Used
 
-### Deployment
+- React 19
+- React Router 7
+- Tailwind CSS 3
+- Shadcn UI Components
+- Lucide React Icons
+- Axios
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## License
 
-### `npm run build` fails to minify
+MIT License - feel free to use this template for your own portfolio!
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Support
+
+For issues or questions, please open an issue on GitHub.

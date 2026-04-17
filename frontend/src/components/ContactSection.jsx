@@ -5,7 +5,6 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { useToast } from "../hooks/use-toast";
-import { submitContact } from "../services/api";
 
 const ContactSection = ({ personal }) => {
   const { toast } = useToast();
@@ -28,27 +27,29 @@ const ContactSection = ({ personal }) => {
     e.preventDefault();
     setSubmitting(true);
 
-    try {
-      const response = await submitContact(formData);
+    // Simulate form submission for static site
+    setTimeout(() => {
+      // Save to localStorage for demo purposes
+      const messages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+      messages.push({
+        ...formData,
+        timestamp: new Date().toISOString()
+      });
+      localStorage.setItem('contactMessages', JSON.stringify(messages));
+
       toast({
         title: "Message Sent!",
-        description: response.message,
+        description: "Thank you for reaching out. I'll get back to you soon!",
       });
+      
       setFormData({
         name: "",
         email: "",
         subject: "",
         message: "",
       });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
       setSubmitting(false);
-    }
+    }, 1000);
   };
 
   return (

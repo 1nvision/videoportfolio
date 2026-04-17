@@ -1,22 +1,10 @@
 import React from "react";
 import { Play } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
-import { getProjects } from "../services/api";
+import { portfolioData } from "../mock";
 
 const VideoShowcase = ({ featuredReel }) => {
-  const [thumbnails, setThumbnails] = React.useState([]);
-
-  React.useEffect(() => {
-    const fetchThumbnails = async () => {
-      try {
-        const projects = await getProjects();
-        setThumbnails(projects.slice(0, 4));
-      } catch (error) {
-        console.error("Failed to fetch project thumbnails:", error);
-      }
-    };
-    fetchThumbnails();
-  }, []);
+  const thumbnails = portfolioData.projects.slice(0, 4);
 
   return (
     <section id="showcase" className="py-20 bg-slate-900">
