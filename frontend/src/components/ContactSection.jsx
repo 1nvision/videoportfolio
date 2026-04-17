@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Mail, Send, Instagram, Linkedin, Palette } from "lucide-react";
-import { portfolioData } from "../mock";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { useToast } from "../hooks/use-toast";
+import { submitContact } from "../services/api";
 
-const ContactSection = () => {
+const ContactSection = ({ personal }) => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
@@ -15,6 +15,7 @@ const ContactSection = () => {
     subject: "",
     message: "",
   });
+  const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -23,19 +24,31 @@ const ContactSection = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Mock submission
-    toast({
-      title: "Message Sent!",
-      description: "Thank you for reaching out. I'll get back to you soon.",
-    });
-    setFormData({
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
-    });
+    setSubmitting(true);
+
+    try {
+      const response = await submitContact(formData);
+      toast({
+        title: "Message Sent!",
+        description: response.message,
+      });
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -105,10 +118,11 @@ const ContactSection = () => {
                   </div>
                   <Button
                     type="submit"
+                    disabled={submitting}
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6 text-lg font-semibold"
                   >
-                    Send Message
-                    <Send size={20} className="ml-2" />
+                    {submitting ? "Sending..." : "Send Message"}
+                    {!submitting && <Send size={20} className="ml-2" />}
                   </Button>
                 </form>
               </CardContent>
@@ -121,13 +135,13 @@ const ContactSection = () => {
               <CardContent className="p-6">
                 <h3 className="text-xl font-bold text-slate-900 mb-4">Email</h3>
                 <a
-                  href={`mailto:${portfolioData.personal.email}`}
+                  href={`mailto:${personal.email}`}
                   className="flex items-center gap-3 text-blue-600 hover:text-blue-700 transition-colors group"
                 >
                   <div className="w-10 h-10 rounded-full bg-blue-100 group-hover:bg-blue-600 flex items-center justify-center transition-colors">
                     <Mail size={20} className="text-blue-600 group-hover:text-white transition-colors" />
                   </div>
-                  <span className="text-lg">{portfolioData.personal.email}</span>
+                  <span className="text-lg">{personal.email}</span>
                 </a>
               </CardContent>
             </Card>
@@ -139,7 +153,7 @@ const ContactSection = () => {
                 </h3>
                 <div className="space-y-4">
                   <a
-                    href={portfolioData.personal.social.instagram}
+                    href={personal.social.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 text-slate-700 hover:text-blue-600 transition-colors group"
@@ -150,7 +164,7 @@ const ContactSection = () => {
                     <span className="text-lg">Instagram</span>
                   </a>
                   <a
-                    href={portfolioData.personal.social.linkedin}
+                    href={personal.social.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 text-slate-700 hover:text-blue-600 transition-colors group"
@@ -161,7 +175,7 @@ const ContactSection = () => {
                     <span className="text-lg">LinkedIn</span>
                   </a>
                   <a
-                    href={portfolioData.personal.social.artstation}
+                    href={personal.social.artstation}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 text-slate-700 hover:text-blue-600 transition-colors group"

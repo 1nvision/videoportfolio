@@ -1,14 +1,16 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict
-from typing import List
-import uuid
-from datetime import datetime, timezone
+from typing import Optional
+from models import (
+    PortfolioData, Project, ProjectCreate,
+    ContactMessage, ContactMessageCreate
+)
+from seed_data import seed_portfolio_data, seed_projects
 
 
 ROOT_DIR = Path(__file__).parent
@@ -26,45 +28,80 @@ app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
 
-# Define Models
-class StatusCheck(BaseModel):
-    model_config = ConfigDict(extra="ignore")  # Ignore MongoDB's _id field
+# Seed database on startup
+@app.on_event("startup")
+async def seed_database():
+    # Check if portfolio data exists
+    portfolio_count = await db.portfolio_data.count_documents({})
+    if portfolio_count == 0:
+        portfolio_data = PortfolioData(**seed_portfolio_data)
+        await db.portfolio_data.insert_one(portfolio_data.dict())
+        logging.info("Portfolio data seeded successfully")
     
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    # Check if projects exist
+    project_count = await db.projects.count_documents({})
+    if project_count == 0:
+        projects = [Project(**project_data) for project_data in seed_projects]
+        await db.projects.insert_many([p.dict() for p in projects])
+        logging.info(f"Seeded {len(projects)} projects successfully")
 
-class StatusCheckCreate(BaseModel):
-    client_name: str
 
-# Add your routes to the router instead of directly to app
+# Routes
 @api_router.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Portfolio API is running"}
 
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.model_dump()
-    status_obj = StatusCheck(**status_dict)
-    
-    # Convert to dict and serialize datetime to ISO string for MongoDB
-    doc = status_obj.model_dump()
-    doc['timestamp'] = doc['timestamp'].isoformat()
-    
-    _ = await db.status_checks.insert_one(doc)
-    return status_obj
 
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    # Exclude MongoDB's _id field from the query results
-    status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
+@api_router.get("/portfolio-data")
+async def get_portfolio_data():
+    """Get portfolio data including personal info, featured reel, skills, and experience"""
+    portfolio = await db.portfolio_data.find_one({}, {"_id": 0})
+    if not portfolio:
+        raise HTTPException(status_code=404, detail="Portfolio data not found")
+    return portfolio
+
+
+@api_router.get("/projects")
+async def get_projects(category: Optional[str] = None):
+    """Get all projects, optionally filtered by category"""
+    query = {}
+    if category and category != "All":
+        query["category"] = category
     
-    # Convert ISO string timestamps back to datetime objects
-    for check in status_checks:
-        if isinstance(check['timestamp'], str):
-            check['timestamp'] = datetime.fromisoformat(check['timestamp'])
+    projects = await db.projects.find(query, {"_id": 0}).sort("order", 1).to_list(100)
+    return {"projects": projects}
+
+
+@api_router.get("/projects/{project_id}")
+async def get_project(project_id: str):
+    """Get a single project by ID"""
+    project = await db.projects.find_one({"id": project_id}, {"_id": 0})
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return {"project": project}
+
+
+@api_router.post("/contact")
+async def submit_contact(message: ContactMessageCreate):
+    """Submit a contact form message"""
+    contact_message = ContactMessage(**message.dict())
+    await db.contact_messages.insert_one(contact_message.dict())
+    return {
+        "success": True,
+        "message": "Message sent successfully. I'll get back to you soon!"
+    }
+
+
+@api_router.get("/contact-messages")
+async def get_contact_messages(status: Optional[str] = None):
+    """Get all contact messages (for admin use)"""
+    query = {}
+    if status:
+        query["status"] = status
     
-    return status_checks
+    messages = await db.contact_messages.find(query, {"_id": 0}).sort("created_at", -1).to_list(100)
+    return {"messages": messages}
+
 
 # Include the router in the main app
 app.include_router(api_router)

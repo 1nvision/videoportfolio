@@ -1,9 +1,8 @@
 import React from "react";
 import { ArrowRight, Play } from "lucide-react";
 import { Button } from "./ui/button";
-import { portfolioData } from "../mock";
 
-const HeroSection = () => {
+const HeroSection = ({ personal }) => {
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (element) {
@@ -32,16 +31,16 @@ const HeroSection = () => {
           className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 tracking-tight"
           style={{ fontFamily: "'Bebas Neue', sans-serif" }}
         >
-          {portfolioData.personal.name}
+          {personal.name}
         </h1>
         <p
           className="text-xl sm:text-2xl md:text-3xl text-blue-400 mb-8 font-medium"
           style={{ fontFamily: "'Poppins', sans-serif" }}
         >
-          {portfolioData.personal.title}
+          {personal.title}
         </p>
         <p className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed">
-          {portfolioData.personal.tagline}
+          {personal.tagline}
         </p>
 
         {/* CTA Buttons */}

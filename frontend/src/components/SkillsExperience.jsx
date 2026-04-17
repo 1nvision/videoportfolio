@@ -1,9 +1,8 @@
 import React from "react";
 import { CheckCircle, Briefcase } from "lucide-react";
-import { portfolioData } from "../mock";
 import { Card, CardContent } from "./ui/card";
 
-const SkillsExperience = () => {
+const SkillsExperience = ({ skills, experience }) => {
   return (
     <section id="experience" className="py-20 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -22,7 +21,7 @@ const SkillsExperience = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {portfolioData.skills.map((skillGroup, index) => (
+            {skills.map((skillGroup, index) => (
               <Card key={index} className="border-slate-200 hover:shadow-lg transition-shadow">
                 <CardContent className="p-6">
                   <h3 className="text-xl font-bold text-slate-900 mb-4">
@@ -57,7 +56,7 @@ const SkillsExperience = () => {
           </div>
 
           <div className="max-w-4xl mx-auto space-y-6">
-            {portfolioData.experience.map((exp, index) => (
+            {experience.map((exp, index) => (
               <Card
                 key={index}
                 className="border-slate-200 hover:shadow-lg transition-all hover:border-blue-600"

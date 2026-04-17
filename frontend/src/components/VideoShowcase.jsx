@@ -1,9 +1,23 @@
 import React from "react";
 import { Play } from "lucide-react";
-import { portfolioData } from "../mock";
 import { Card, CardContent } from "./ui/card";
+import { getProjects } from "../services/api";
 
-const VideoShowcase = () => {
+const VideoShowcase = ({ featuredReel }) => {
+  const [thumbnails, setThumbnails] = React.useState([]);
+
+  React.useEffect(() => {
+    const fetchThumbnails = async () => {
+      try {
+        const projects = await getProjects();
+        setThumbnails(projects.slice(0, 4));
+      } catch (error) {
+        console.error("Failed to fetch project thumbnails:", error);
+      }
+    };
+    fetchThumbnails();
+  }, []);
+
   return (
     <section id="showcase" className="py-20 bg-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -15,7 +29,7 @@ const VideoShowcase = () => {
             Featured Reel
           </h2>
           <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-            {portfolioData.featuredReel.description}
+            {featuredReel.description}
           </p>
         </div>
 
@@ -26,8 +40,8 @@ const VideoShowcase = () => {
               <div className="relative aspect-video bg-slate-950">
                 <iframe
                   className="w-full h-full"
-                  src={portfolioData.featuredReel.videoUrl}
-                  title={portfolioData.featuredReel.title}
+                  src={featuredReel.videoUrl}
+                  title={featuredReel.title}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 ></iframe>
@@ -38,7 +52,7 @@ const VideoShowcase = () => {
 
         {/* Video Thumbnails */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 max-w-5xl mx-auto">
-          {portfolioData.projects.slice(0, 4).map((project, index) => (
+          {thumbnails.map((project, index) => (
             <div
               key={index}
               className="group relative aspect-video rounded-lg overflow-hidden cursor-pointer transform transition-all hover:scale-105 hover:shadow-xl"

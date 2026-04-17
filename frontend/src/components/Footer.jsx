@@ -1,8 +1,7 @@
 import React from "react";
 import { Instagram, Linkedin, Palette, Mail } from "lucide-react";
-import { portfolioData } from "../mock";
 
-const Footer = () => {
+const Footer = ({ personal }) => {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -15,10 +14,10 @@ const Footer = () => {
               className="text-2xl font-bold text-white mb-4"
               style={{ fontFamily: "'Bebas Neue', sans-serif" }}
             >
-              {portfolioData.personal.name}
+              {personal.name}
             </h3>
             <p className="text-slate-400 mb-4">
-              {portfolioData.personal.title}
+              {personal.title}
             </p>
             <p className="text-sm text-slate-500">
               Creating compelling sports content and visual stories
@@ -77,7 +76,7 @@ const Footer = () => {
             <h4 className="text-lg font-bold text-white mb-4">Follow Me</h4>
             <div className="flex gap-4">
               <a
-                href={portfolioData.personal.social.instagram}
+                href={personal.social.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-slate-800 hover:bg-blue-600 flex items-center justify-center transition-colors"
@@ -85,7 +84,7 @@ const Footer = () => {
                 <Instagram size={20} />
               </a>
               <a
-                href={portfolioData.personal.social.linkedin}
+                href={personal.social.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-slate-800 hover:bg-blue-600 flex items-center justify-center transition-colors"
@@ -93,7 +92,7 @@ const Footer = () => {
                 <Linkedin size={20} />
               </a>
               <a
-                href={portfolioData.personal.social.artstation}
+                href={personal.social.artstation}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-slate-800 hover:bg-blue-600 flex items-center justify-center transition-colors"
@@ -101,7 +100,7 @@ const Footer = () => {
                 <Palette size={20} />
               </a>
               <a
-                href={`mailto:${portfolioData.personal.email}`}
+                href={`mailto:${personal.email}`}
                 className="w-10 h-10 rounded-full bg-slate-800 hover:bg-blue-600 flex items-center justify-center transition-colors"
               >
                 <Mail size={20} />
@@ -112,7 +111,7 @@ const Footer = () => {
 
         <div className="border-t border-slate-800 pt-8 text-center text-sm text-slate-500">
           <p>
-            © {currentYear} {portfolioData.personal.name}. All rights reserved.
+            © {currentYear} {personal.name}. All rights reserved.
           </p>
         </div>
       </div>

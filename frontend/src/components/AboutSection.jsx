@@ -1,7 +1,6 @@
 import React from "react";
-import { portfolioData } from "../mock";
 
-const AboutSection = () => {
+const AboutSection = ({ personal }) => {
   return (
     <section id="about" className="py-20 bg-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -27,7 +26,7 @@ const AboutSection = () => {
               About Me
             </h2>
             <div className="space-y-4 text-slate-300 leading-relaxed">
-              <p className="text-lg">{portfolioData.personal.about}</p>
+              <p className="text-lg">{personal.about}</p>
               <p className="text-lg">
                 My approach combines technical expertise with creative storytelling,
                 ensuring every frame serves the narrative. Whether it's capturing the
