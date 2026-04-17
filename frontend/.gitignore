@@ -5,6 +5,18 @@
 /.pnp
 .pnp.js
 
+# Initialize git (if not already done)
+git init
+
+# Add all files
+git add .
+
+# Commit
+git commit -m "Initial commit - Portfolio website"
+
+# Push to GitHub
+git push -u origin main
+
 # testing
 /coverage
 
